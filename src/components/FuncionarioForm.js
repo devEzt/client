@@ -20,6 +20,36 @@ const FuncionarioForm = () => {
     })
   }
 
+  const handleCreate = async (e) => {
+    e.preventDefault()
+
+    const { nome, sobrenome, email, nnis } = frase
+
+    const res = await fetch('/add-funcionario', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nome,
+        sobrenome,
+        email,
+        nnis,
+      }),
+    })
+
+    const data = await res.json()
+    console.log(data)
+
+    if (res.status === 404 || !data) {
+      alert('Erro encontrado!!')
+      console.log('Erro')
+    } else {
+      alert('Funcionário adicionado com sucesso!!')
+      console.log('Funcionario adicionado')
+    }
+  }
+
   return (
     <div className="container">
       <NavLink to="/">Home</NavLink>
@@ -82,7 +112,7 @@ const FuncionarioForm = () => {
             />
           </div>
 
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" onClick={handleCreate} class="btn btn-primary">
             Submit
           </button>
         </div>

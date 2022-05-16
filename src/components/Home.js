@@ -1,14 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import CreateIcon from '@mui/icons-material/Create'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import { NavLink } from 'react-router-dom'
 
 const Home = () => {
+  const [getFuncionarioData, setFuncionarioData] = useState([])
+
+  console.log(getFuncionarioData)
+
+  const getFuncionario = async (e) => {
+    const res = await fetch('/get-funcionarios', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const data = await res.json()
+    console.log(data)
+
+    if (res.status === 404 || !data) {
+      console.log('Erro')
+    } else {
+      setFuncionarioData(data)
+      console.log('Lista de Funcionários geradas')
+    }
+  }
+
+  useEffect(() => {
+    getFuncionario()
+  }, [])
+
   return (
     <div className="mt-5">
       <div className="container">
         <div className="add_btn mt-2 mb-2">
-          <button className="btn btn-primary">Add Funcionario</button>
+          <NavLink to="/add-funcionario" className="btn btn-primary">
+            Add Funcionario
+          </NavLink>
         </div>
         <table class="table">
           <thead>
@@ -22,24 +52,30 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>James</td>
-              <td>Bond</td>
-              <td>james@gmail.com</td>
-              <td>12312312312</td>
-              <td className="d-flex justify-content-between">
-                <button className="btn btn-success">
-                  <RemoveRedEyeIcon />
-                </button>
-                <button className="btn btn-primary">
-                  <CreateIcon />
-                </button>
-                <button className="btn btn-danger">
-                  <DeleteOutlineIcon />
-                </button>
-              </td>
-            </tr>
+            {getFuncionarioData.map((funcionario, id) => {
+              return (
+                <>
+                  <tr>
+                    <th scope="row">{id + 1}</th>
+                    <td>{funcionario.nome}</td>
+                    <td>{funcionario.sobrenome}</td>
+                    <td>{funcionario.email}</td>
+                    <td>{funcionario.nnis}</td>
+                    <td className="d-flex justify-content-between">
+                      <button className="btn btn-success">
+                        <RemoveRedEyeIcon />
+                      </button>
+                      <button className="btn btn-primary">
+                        <CreateIcon />
+                      </button>
+                      <button className="btn btn-danger">
+                        <DeleteOutlineIcon />
+                      </button>
+                    </td>
+                  </tr>
+                </>
+              )
+            })}
           </tbody>
         </table>
       </div>
