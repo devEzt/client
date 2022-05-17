@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { NavLink, useParams } from 'react-router-dom'
+import { NavLink, useParams, useNavigate } from 'react-router-dom'
 
 const FuncionarioEdit = () => {
+  const navigate = useNavigate()
+
   const [frase, setFrase] = useState({
     nome: '',
     sobrenome: '',
@@ -47,6 +49,35 @@ const FuncionarioEdit = () => {
     getFuncionario()
     // eslint-disable-next-line
   }, [])
+
+  const editFuncionario = async (e) => {
+    e.preventDefault()
+
+    const { nome, sobrenome, email, nnis } = frase
+
+    const res2 = await fetch(`/edit-funcionario/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nome,
+        sobrenome,
+        email,
+        nnis,
+      }),
+    })
+
+    const data2 = await res2.json()
+    console.log(data2)
+
+    if (res2.status === 422 || !data2) {
+      alert('Preencha os dados')
+    } else {
+      alert('Funcionário atualizado!')
+      navigate('/')
+    }
+  }
 
   return (
     <div className="container">
@@ -110,7 +141,7 @@ const FuncionarioEdit = () => {
             />
           </div>
 
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" onClick={editFuncionario} class="btn btn-primary">
             Submit
           </button>
         </div>

@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 const FuncionarioForm = () => {
+  const navigate = useNavigate()
+
   const [frase, setFrase] = useState({
     nome: '',
     sobrenome: '',
@@ -46,6 +48,7 @@ const FuncionarioForm = () => {
       console.log('Erro')
     } else {
       alert('Funcionário adicionado com sucesso!!')
+      navigate('/')
       console.log('Funcionario adicionado')
     }
   }
