@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
+import { createData } from '../context/ContextProvider'
 
 const FuncionarioForm = () => {
+  const { fdata, setFData } = useContext(createData)
+
   const navigate = useNavigate()
 
   const [frase, setFrase] = useState({
@@ -47,8 +50,8 @@ const FuncionarioForm = () => {
       alert('Erro encontrado!!')
       console.log('Erro')
     } else {
-      alert('Funcionário adicionado com sucesso!!')
       navigate('/')
+      setFData(data)
       console.log('Funcionario adicionado')
     }
   }

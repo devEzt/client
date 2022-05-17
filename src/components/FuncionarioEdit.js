@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { NavLink, useParams, useNavigate } from 'react-router-dom'
+import { editData } from '../context/ContextProvider'
 
 const FuncionarioEdit = () => {
+  const { upData, setUpData } = useContext(editData)
+
   const navigate = useNavigate()
 
   const [frase, setFrase] = useState({
@@ -74,7 +77,7 @@ const FuncionarioEdit = () => {
     if (res2.status === 422 || !data2) {
       alert('Preencha os dados')
     } else {
-      alert('Funcionário atualizado!')
+      setUpData(data2)
       navigate('/')
     }
   }
