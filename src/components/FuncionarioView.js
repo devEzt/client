@@ -1,21 +1,53 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CreateIcon from '@mui/icons-material/Create'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
+import { useParams } from 'react-router-dom'
 
 const logo = require('../images/profile.png')
 
+const mockUserProfile = {
+  username: 'Alexandre Dev',
+}
+
 const FuncionarioView = () => {
-  const mockValues = {
-    name: 'James',
+  const [getFuncionarioData, setFuncionarioData] = useState([])
+  console.log(getFuncionarioData)
+
+  const { id } = useParams('')
+
+  console.log(id)
+
+  const getFuncionario = async () => {
+    const res = await fetch(`/get-funcionario/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const data = await res.json()
+    console.log(data)
+
+    if (res.status === 422 || !data) {
+      console.log('Erro')
+    } else {
+      setFuncionarioData(data)
+      console.log('Lista de Funcionários gerada...')
+    }
   }
+
+  useEffect(() => {
+    getFuncionario()
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <div className="container mt-3 ">
-      <h1 style={{ fontWeight: 400 }}>{`Bem vindo ${mockValues.name}`}</h1>
+      <h1 style={{ fontWeight: 400 }}>{`Bem vindo ${mockUserProfile.username}`}</h1>
 
       <Card sx={{ maxWidth: 600 }}>
         <CardContent>
@@ -31,21 +63,21 @@ const FuncionarioView = () => {
             <div className="left_view col-lg-6 col-md-6 col-12">
               <img src={logo} style={{ width: 50 }} alt="profile" />
               <h3 className="mt-3">
-                Nome: <span style={{ fontWeight: 400 }}>James</span>
+                Nome: <span style={{ fontWeight: 400 }}>{getFuncionarioData.nome}</span>
               </h3>
               <h3 className="mt-3">
-                Sobrenome: <span style={{ fontWeight: 400 }}>Bond</span>
+                Sobrenome: <span style={{ fontWeight: 400 }}>{getFuncionarioData.sobrenome}</span>
               </h3>
             </div>
 
             <div className="right_view col-lg-6 col-md-6 col-12">
               <p className="mt-5">
                 <MailOutlineIcon />
-                Email: <span>james@gmail.com</span>
+                Email: <span>{getFuncionarioData.email}</span>
               </p>
               <p className="mt-3">
                 <CreditCardIcon />
-                Número NIS: <span>12312312</span>
+                Número NIS: <span>{getFuncionarioData.nnis}</span>
               </p>
             </div>
           </div>
