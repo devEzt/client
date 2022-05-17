@@ -5,7 +5,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
-import { useParams } from 'react-router-dom'
+import { NavLink, useParams, useNavigate } from 'react-router-dom'
 
 const logo = require('../images/profile.png')
 
@@ -18,8 +18,9 @@ const FuncionarioView = () => {
   console.log(getFuncionarioData)
 
   const { id } = useParams('')
-
   console.log(id)
+
+  const navigate = useNavigate()
 
   const getFuncionario = async () => {
     const res = await fetch(`/get-funcionario/${id}`, {
@@ -45,6 +46,24 @@ const FuncionarioView = () => {
     // eslint-disable-next-line
   }, [])
 
+  const handleDelete = async (id) => {
+    const res2 = await fetch(`/delete-funcionario/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    const deleteFuncionario = await res2.json()
+    console.log(deleteFuncionario)
+
+    if (res2.status === 422 || !deleteFuncionario) {
+      console.log('Erro')
+    } else {
+      console.log('Funcionario Deletado')
+      navigate('/')
+    }
+  }
+
   return (
     <div className="container mt-3 ">
       <h1 style={{ fontWeight: 400 }}>{`Bem vindo ${mockUserProfile.username}`}</h1>
@@ -52,10 +71,13 @@ const FuncionarioView = () => {
       <Card sx={{ maxWidth: 600 }}>
         <CardContent>
           <div className="add_btn">
-            <button className="btn btn-primary mx-2">
-              <CreateIcon />
-            </button>
-            <button className="btn btn-danger">
+            <NavLink to={`/edit-funcionario/${getFuncionarioData._id}`}>
+              <button className="btn btn-primary mx-2">
+                <CreateIcon />
+              </button>
+            </NavLink>
+
+            <button className="btn btn-danger" onClick={() => handleDelete(getFuncionarioData._id)}>
               <DeleteOutlineIcon />
             </button>
           </div>
