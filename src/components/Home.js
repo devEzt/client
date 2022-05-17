@@ -20,11 +20,11 @@ const Home = () => {
     const data = await res.json()
     console.log(data)
 
-    if (res.status === 404 || !data) {
+    if (res.status === 422 || !data) {
       console.log('Erro')
     } else {
       setFuncionarioData(data)
-      console.log('Lista de Funcionários geradas')
+      console.log('Lista de Funcionários gerada...')
     }
   }
 
@@ -62,9 +62,11 @@ const Home = () => {
                     <td>{funcionario.email}</td>
                     <td>{funcionario.nnis}</td>
                     <td className="d-flex justify-content-between">
-                      <button className="btn btn-success">
-                        <RemoveRedEyeIcon />
-                      </button>
+                      <NavLink to={`view-funcionario/${funcionario._id}`}>
+                        <button className="btn btn-success">
+                          <RemoveRedEyeIcon />
+                        </button>
+                      </NavLink>
                       <button className="btn btn-primary">
                         <CreateIcon />
                       </button>

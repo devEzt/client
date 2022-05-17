@@ -1,13 +1,15 @@
 import React from 'react'
+import { NavLink } from 'react-router-dom'
 
 function NavBar() {
   return (
     <header>
       <nav className="navbar navbar-expand-lg bg-light">
         <div className="container-fluid">
-          <a className="navbar-brand" href="#">
-            Navbar
-          </a>
+          <NavLink className="navbar-brand" to="/">
+            CRUD de funcionários Reactjs
+          </NavLink>
+
           <button
             className="navbar-toggler"
             type="button"
