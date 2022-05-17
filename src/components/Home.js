@@ -67,9 +67,11 @@ const Home = () => {
                           <RemoveRedEyeIcon />
                         </button>
                       </NavLink>
-                      <button className="btn btn-primary">
-                        <CreateIcon />
-                      </button>
+                      <NavLink to={`edit-funcionario/${funcionario._id}`}>
+                        <button className="btn btn-primary">
+                          <CreateIcon />
+                        </button>
+                      </NavLink>
                       <button className="btn btn-danger">
                         <DeleteOutlineIcon />
                       </button>

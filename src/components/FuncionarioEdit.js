@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { NavLink, useParams } from 'react-router-dom'
 
 const FuncionarioEdit = () => {
   const [frase, setFrase] = useState({
@@ -19,6 +19,34 @@ const FuncionarioEdit = () => {
       }
     })
   }
+
+  const { id } = useParams('')
+
+  console.log(id)
+
+  const getFuncionario = async () => {
+    const res = await fetch(`/get-funcionario/${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+
+    const data = await res.json()
+    console.log(data)
+
+    if (res.status === 422 || !data) {
+      console.log('Erro')
+    } else {
+      setFrase(data)
+      console.log('Lista de Funcionários gerada...')
+    }
+  }
+
+  useEffect(() => {
+    getFuncionario()
+    // eslint-disable-next-line
+  }, [])
 
   return (
     <div className="container">
