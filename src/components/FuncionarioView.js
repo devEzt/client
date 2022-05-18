@@ -35,7 +35,6 @@ const FuncionarioView = () => {
       toast.error('Não foi possivel obter o funcionário!!')
     } else {
       setFuncionarioData(data)
-      toast.success('Dados de funcionário obtidos.')
     }
   }
 

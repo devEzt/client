@@ -22,7 +22,6 @@ const Home = () => {
       toast.error('Não foi possivel obter o funcionário!!')
     } else {
       setFuncionarioData(data)
-      toast.success('Lista de Funcionários gerada...')
     }
   }
 
