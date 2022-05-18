@@ -5,23 +5,17 @@ import CreateIcon from '@mui/icons-material/Create'
 import { NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
+import api from '../services/api'
+
 const Home = () => {
   const [getFuncionarioData, setFuncionarioData] = useState([])
 
-  const getFuncionario = async (e) => {
-    const res = await fetch('/get-funcionarios', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-
-    const data = await res.json()
-
-    if (res.status === 500 || !data) {
-      toast.error('Não foi possivel obter o funcionário!!')
-    } else {
-      setFuncionarioData(data)
+  const getFuncionario = async () => {
+    try {
+      const res = await api.get(`/get-funcionarios`)
+      setFuncionarioData(res.data)
+    } catch (err) {
+      throw new Error(err)
     }
   }
 

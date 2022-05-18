@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import api from '../services/api'
 import FuncionarioCreate from './FuncionarioCreate'
 import { toast } from 'react-toastify'
+
+import api from '../services/api'
 
 const FuncionarioEdit = () => {
   const [userToEdit, setUserToEdit] = useState({})
@@ -33,7 +34,7 @@ const FuncionarioEdit = () => {
     try {
       const res = await api.patch(`/edit-funcionario/${values._id}`, values)
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         toast.success('Funcionário Editado com sucesso!!')
         navigate('/')
       }
