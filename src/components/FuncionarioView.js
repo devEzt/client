@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import CreateIcon from '@mui/icons-material/Create'
+import { NavLink, useParams, useNavigate } from 'react-router-dom'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
 import MailOutlineIcon from '@mui/icons-material/MailOutline'
 import CreditCardIcon from '@mui/icons-material/CreditCard'
-import { NavLink, useParams, useNavigate } from 'react-router-dom'
+import CreateIcon from '@mui/icons-material/Create'
+import CardContent from '@mui/material/CardContent'
+import Card from '@mui/material/Card'
+import { toast } from 'react-toastify'
 
 const logo = require('../images/profile.png')
 
@@ -15,10 +16,8 @@ const mockUserProfile = {
 
 const FuncionarioView = () => {
   const [getFuncionarioData, setFuncionarioData] = useState([])
-  console.log(getFuncionarioData)
 
   const { id } = useParams('')
-  console.log(id)
 
   const navigate = useNavigate()
 
@@ -31,13 +30,12 @@ const FuncionarioView = () => {
     })
 
     const data = await res.json()
-    console.log(data)
 
-    if (res.status === 422 || !data) {
-      console.log('Erro')
+    if (res.status === 500 || !data) {
+      toast.error('Não foi possivel obter o funcionário!!')
     } else {
       setFuncionarioData(data)
-      console.log('Lista de Funcionários gerada...')
+      toast.success('Dados de funcionário obtidos.')
     }
   }
 
@@ -54,12 +52,11 @@ const FuncionarioView = () => {
       },
     })
     const deleteFuncionario = await res2.json()
-    console.log(deleteFuncionario)
 
-    if (res2.status === 422 || !deleteFuncionario) {
-      console.log('Erro')
+    if (res2.status === 500 || !deleteFuncionario) {
+      toast.error('Não foi possivel Deletar o funcionário!!')
     } else {
-      console.log('Funcionario Deletado')
+      toast.success('Funcionario Deletado com Sucesso!')
       navigate('/')
     }
   }

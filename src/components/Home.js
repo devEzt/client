@@ -1,18 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import CreateIcon from '@mui/icons-material/Create'
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { NavLink } from 'react-router-dom'
-
-import { createData, editData, deleteData } from '../context/ContextProvider'
+import { toast } from 'react-toastify'
 
 const Home = () => {
   const [getFuncionarioData, setFuncionarioData] = useState([])
-  console.log(getFuncionarioData)
-
-  const { fdata, setFData } = useContext(createData)
-  const { upData, setUpData } = useContext(editData)
-  const { deletData, setDeletData } = useContext(deleteData)
 
   const getFuncionario = async (e) => {
     const res = await fetch('/get-funcionarios', {
@@ -23,13 +17,12 @@ const Home = () => {
     })
 
     const data = await res.json()
-    console.log(data)
 
-    if (res.status === 422 || !data) {
-      console.log('Erro')
+    if (res.status === 500 || !data) {
+      toast.error('Não foi possivel obter o funcionário!!')
     } else {
       setFuncionarioData(data)
-      console.log('Lista de Funcionários gerada...')
+      toast.success('Lista de Funcionários gerada...')
     }
   }
 
@@ -45,50 +38,17 @@ const Home = () => {
       },
     })
     const deleteFuncionario = await res2.json()
-    console.log(deleteFuncionario)
 
-    if (res2.status === 422 || !deleteFuncionario) {
-      console.log('Erro')
+    if (res2.status === 500 || !deleteFuncionario) {
+      toast.error('Não foi possivel Deletar o funcionário!!')
     } else {
-      console.log('Funcionario Deletado')
-      setDeletData(deleteData)
+      toast.success('Funcionario Deletado com Sucesso!')
       getFuncionario()
     }
   }
 
   return (
     <>
-      {fdata ? (
-        <>
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{fdata.nome}</strong> Funcionário Adicionado com sucesso!.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        </>
-      ) : (
-        ''
-      )}
-      {upData ? (
-        <>
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{fdata.nome}</strong> Funcionário Atualizado com sucesso!.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        </>
-      ) : (
-        ''
-      )}
-      {deletData ? (
-        <>
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>{deletData.nome}</strong> Funcionário Deletado com sucesso!.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        </>
-      ) : (
-        ''
-      )}
-
       <div className="mt-5">
         <div className="container">
           <div className="add_btn mt-2 mb-2">
@@ -96,7 +56,7 @@ const Home = () => {
               Add Funcionario
             </NavLink>
           </div>
-          <table class="table">
+          <table className="table">
             <thead>
               <tr className="table-dark">
                 <th scope="col">id</th>
@@ -110,30 +70,28 @@ const Home = () => {
             <tbody>
               {getFuncionarioData.map((funcionario, id) => {
                 return (
-                  <>
-                    <tr>
-                      <th scope="row">{id + 1}</th>
-                      <td>{funcionario.nome}</td>
-                      <td>{funcionario.sobrenome}</td>
-                      <td>{funcionario.email}</td>
-                      <td>{funcionario.nnis}</td>
-                      <td className="d-flex justify-content-between">
-                        <NavLink to={`view-funcionario/${funcionario._id}`}>
-                          <button className="btn btn-success">
-                            <RemoveRedEyeIcon />
-                          </button>
-                        </NavLink>
-                        <NavLink to={`edit-funcionario/${funcionario._id}`}>
-                          <button className="btn btn-primary">
-                            <CreateIcon />
-                          </button>
-                        </NavLink>
-                        <button className="btn btn-danger" onClick={() => handleDelete(funcionario._id)}>
-                          <DeleteOutlineIcon />
+                  <tr key={id}>
+                    <th scope="row">{id + 1}</th>
+                    <td>{funcionario.nome}</td>
+                    <td>{funcionario.sobrenome}</td>
+                    <td>{funcionario.email}</td>
+                    <td>{funcionario.nnis}</td>
+                    <td className="d-flex justify-content-between">
+                      <NavLink to={`view-funcionario/${funcionario._id}`}>
+                        <button className="btn btn-success">
+                          <RemoveRedEyeIcon />
                         </button>
-                      </td>
-                    </tr>
-                  </>
+                      </NavLink>
+                      <NavLink to={`edit-funcionario/${funcionario._id}`}>
+                        <button className="btn btn-primary">
+                          <CreateIcon />
+                        </button>
+                      </NavLink>
+                      <button className="btn btn-danger" onClick={() => handleDelete(funcionario._id)}>
+                        <DeleteOutlineIcon />
+                      </button>
+                    </td>
+                  </tr>
                 )
               })}
             </tbody>
