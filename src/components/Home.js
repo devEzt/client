@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
 import CreateIcon from '@mui/icons-material/Create'
@@ -9,6 +10,9 @@ import api from '../services/api'
 
 const Home = () => {
   const [getFuncionarioData, setFuncionarioData] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  const navigate = useNavigate()
 
   const getFuncionario = async () => {
     try {
@@ -24,25 +28,28 @@ const Home = () => {
   }, [])
 
   const handleDelete = async (id) => {
-    const res2 = await fetch(`/delete-funcionario/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    const deleteFuncionario = await res2.json()
+    setIsLoading(true)
+    try {
+      const res = await api.delete(`/delete-funcionario/${id}`)
 
-    if (res2.status === 500 || !deleteFuncionario) {
-      toast.error('Não foi possivel Deletar o funcionário!!')
-    } else {
       toast.success('Funcionario Deletado com Sucesso!')
-      getFuncionario()
+      getFuncionario(res.data)
+      navigate('/')
+    } catch (err) {
+      throw new Error(err)
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  return (
+  return isLoading ? (
+    <div>Está carregando...</div>
+  ) : (
     <>
       <div className="mt-5">
+        <div className="center">
+          <h1 style={{ fontWeight: 400 }}>Bem vindo ao CRUD de Funcionários</h1>
+        </div>
         <div className="container">
           <div className="add_btn mt-2 mb-2">
             <NavLink to="/add-funcionario" className="btn btn-primary">

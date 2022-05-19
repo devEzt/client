@@ -1,6 +1,7 @@
 import React from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { NavLink, useNavigate } from 'react-router-dom'
+import HomeIcon from '@mui/icons-material/Home'
 import { FormGroup } from 'react-bootstrap'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
@@ -10,7 +11,7 @@ import api from '../services/api'
 const FuncionarioCreate = (props) => {
   const validationSchema = Yup.object({
     nome: Yup.string().min(2, 'Nome Curto!').max(30, 'Muito Longo!').required('Campo Obrigatório'),
-    sobrenome: Yup.string().required('Campo Obrigatório'),
+    sobrenome: Yup.string().min(2, 'Sobrenome Curto!').max(50, 'Muito Longo!').required('Campo Obrigatório'),
     email: Yup.string().email('Você inseriu um E-mail Inválido!'),
     nnis: Yup.number().positive('Número NIS é inválido').integer('Número NIS é inválido').required('Campo Obrigatório'),
   })
@@ -46,8 +47,12 @@ const FuncionarioCreate = (props) => {
   }
 
   return (
-    <div className="container">
-      <NavLink to="/">Home</NavLink>
+    <div className="container mt-4">
+      <NavLink to="/">
+        <button className="btn btn-primary">
+          <HomeIcon />
+        </button>
+      </NavLink>
       <Formik
         {...props}
         initialValues={props.isEdit ? props.initialValues : formCriarFuncionario}
@@ -79,7 +84,7 @@ const FuncionarioCreate = (props) => {
                     id="sobrenome-funcionario"
                     name="sobrenome"
                     minLength="2"
-                    maxLength="50"
+                    maxLength="56"
                     type="text"
                     className="form-control"
                     required
