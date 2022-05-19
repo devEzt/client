@@ -19,3 +19,7 @@
 .right_view span {
   font-weight: 500;
 }
+
+.center h1 {
+  text-align: center;
+}
